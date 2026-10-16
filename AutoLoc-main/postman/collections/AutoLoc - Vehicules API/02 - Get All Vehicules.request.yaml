@@ -1,0 +1,29 @@
+$kind: http-request
+name: 'Get All Vehicules'
+order: 2000
+method: GET
+url: '{{base_url}}/vehicules'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 200", function () {
+          pm.response.to.have.status(200);
+      });
+      pm.test("Response is an array", function () {
+          var json = pm.response.json();
+          pm.expect(json).to.be.an("array");
+      });
+      pm.test("Array is not empty", function () {
+          var json = pm.response.json();
+          pm.expect(json.length).to.be.above(0);
+      });
+      pm.test("Each vehicule has required fields", function () {
+          var json = pm.response.json();
+          json.forEach(function(v) {
+              pm.expect(v).to.have.property("idVehicule");
+              pm.expect(v).to.have.property("immatriculation");
+              pm.expect(v).to.have.property("marque");
+              pm.expect(v).to.have.property("statut");
+          });
+      });

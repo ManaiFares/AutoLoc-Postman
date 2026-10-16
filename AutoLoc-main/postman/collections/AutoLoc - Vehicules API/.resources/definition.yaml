@@ -1,0 +1,5 @@
+$kind: collection
+description: Tests for the Vehicule endpoints of the AutoLoc Spring Boot API
+variables:
+  base_url: http://localhost:8081
+  vehicule_id: ""

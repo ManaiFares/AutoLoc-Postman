@@ -1,0 +1,24 @@
+$kind: http-request
+name: 'Get Vehicule By ID'
+order: 3000
+method: GET
+url: '{{base_url}}/vehicules/getById/{{vehicule_id}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 200", function () {
+          pm.response.to.have.status(200);
+      });
+      pm.test("Response has correct ID", function () {
+          var json = pm.response.json();
+          pm.expect(json.idVehicule).to.eql(pm.collectionVariables.get("vehicule_id"));
+      });
+      pm.test("Response has immatriculation", function () {
+          var json = pm.response.json();
+          pm.expect(json).to.have.property("immatriculation");
+      });
+      pm.test("Response has marque", function () {
+          var json = pm.response.json();
+          pm.expect(json).to.have.property("marque");
+      });

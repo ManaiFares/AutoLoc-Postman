@@ -1,0 +1,43 @@
+$kind: http-request
+name: 'Ajouter Vehicule'
+order: 1000
+method: POST
+url: '{{base_url}}/vehicules/ajouterVehicule'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "immatriculation": "TEST-0001",
+      "marque": "Renault",
+      "modele": "Clio",
+      "categorie": "CITADINE",
+      "tarifJournalier": 35.00,
+      "statut": "DISPONIBLE"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 200", function () {
+          pm.response.to.have.status(200);
+      });
+      pm.test("Response has idVehicule", function () {
+          var json = pm.response.json();
+          pm.expect(json).to.have.property("idVehicule");
+      });
+      pm.test("Immatriculation is correct", function () {
+          var json = pm.response.json();
+          pm.expect(json.immatriculation).to.eql("TEST-0001");
+      });
+      pm.test("Statut is DISPONIBLE", function () {
+          var json = pm.response.json();
+          pm.expect(json.statut).to.eql("DISPONIBLE");
+      });
+      // Save the ID for next requests
+      var json = pm.response.json();
+      if (json.idVehicule) {
+          pm.collectionVariables.set("vehicule_id", json.idVehicule);
+      }
