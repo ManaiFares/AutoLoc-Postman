@@ -31,7 +31,12 @@ public class Agence {
     @Column(nullable = false, length = 30)
     private String telephone;
 
-    @OneToMany(mappedBy = "agence")
+    //@JsonIgnore
+    @OneToMany(mappedBy = "agence",
+        cascade =  CascadeType.ALL,
+        fetch = FetchType.LAZY,
+        orphanRemoval = true)
+
     private Set<Vehicule> vehicules = new HashSet<>();
 
     @OneToMany(mappedBy = "agence", cascade = CascadeType.ALL, orphanRemoval = true)
